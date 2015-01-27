@@ -16,6 +16,7 @@ import urllib
 import urllib2
 import os
 import tabulate
+import re
 
 composite_schedule = "http://ushlstats.stats.pointstreak.com/leagueschedule.html?leagueid=49&seasonid=12983"
 
@@ -44,5 +45,33 @@ def sift_games(link):
 
 gamesheets = sift_games(composite_schedule)
 
+print gamesheets
+
+
+gamesheets2 = []
 for sheet in gamesheets:
-	urllib2.urlopen()
+	sheet = sheet.replace( 'gamesheet_full', 'boxscore')
+	gamesheets2.append(sheet)
+
+print gamesheets2
+for game in gamesheets2:
+	print ""
+	link = "http://ushlstats.stats.pointstreak.com/" + game
+	print  link
+	hand = urllib2.urlopen(link)
+	soup2 = BeautifulSoup(hand)
+	cleaned_up = soup2.select(".notes")
+	for thing in cleaned_up:
+		analyze = str(thing.find_all('br'))
+		end = analyze.find( 'Scorekeeper')
+		print analyze[0:end].replace('<br>' , '\n')
+	hand.close()
+
+
+
+
+
+
+
+
+
