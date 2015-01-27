@@ -46,29 +46,56 @@ def sift_games(link):
 gamesheets = sift_games(composite_schedule)
 
 # print gamesheets
+def show_box(gamesheets):
+	boxscore = []
+	game_number = 1
+	gamesheets2 = []
+	for sheet in gamesheets:
+		sheet = sheet.replace( 'gamesheet_full', 'boxscore')
+		gamesheets2.append(sheet)
+
+	# print gamesheets2
+	sike = 0
+	while sike == 0:
+		for game in gamesheets2:
+			print ""
+			link = "http://ushlstats.stats.pointstreak.com/" + game
+			# print  link
+			hand = urllib2.urlopen(link)
+			soup2 = BeautifulSoup(hand)
+			cleaned_up = soup2.select(".notes")
+
+			for thing in cleaned_up:
+				analyze = str(thing.find_all('br'))
+				end = analyze.find( 'Scorekeeper')
+				final = analyze[1:end].replace('<br>' , ';')
+				# print final 
+				final2 = final.split(";")
+				final3 = final2[1:-1]
+			
+			# print "This is game #" , game_number , final3
+			game_number += 1
+
+			boxscore.append(final3)
+
+			hand.close()
+			if game_number == 6:
+				sike = 1
+				break
+	return boxscore
+
+ushl_scrape = show_box(gamesheets)
+# Get rid of the blank spaces in the list...
 
 
-gamesheets2 = []
-for sheet in gamesheets:
-	sheet = sheet.replace( 'gamesheet_full', 'boxscore')
-	gamesheets2.append(sheet)
+for index, entry in enumerate(ushl_scrape):
+	print "\nThis is game INDEX#:" ,  index
+	info = [i for i in entry]
+	couple = (index , info)
 
-# print gamesheets2
-for game in gamesheets2:
-	print ""
-	link = "http://ushlstats.stats.pointstreak.com/" + game
-	print  link
-	hand = urllib2.urlopen(link)
-	soup2 = BeautifulSoup(hand)
-	cleaned_up = soup2.select(".notes")
-	for thing in cleaned_up:
-		analyze = str(thing.find_all('br'))
-		end = analyze.find( 'Scorekeeper')
-		final = analyze[1:end].replace('<br>' , ';')
-		# print final 
-		final2 = final.split(";")
-		print final2
-	hand.close()
+	print couple
+
+
 
 
 
