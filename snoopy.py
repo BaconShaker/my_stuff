@@ -45,7 +45,7 @@ def sift_games(link):
 
 gamesheets = sift_games(composite_schedule)
 
-print gamesheets
+# print gamesheets
 
 
 gamesheets2 = []
@@ -53,7 +53,7 @@ for sheet in gamesheets:
 	sheet = sheet.replace( 'gamesheet_full', 'boxscore')
 	gamesheets2.append(sheet)
 
-print gamesheets2
+# print gamesheets2
 for game in gamesheets2:
 	print ""
 	link = "http://ushlstats.stats.pointstreak.com/" + game
@@ -64,7 +64,10 @@ for game in gamesheets2:
 	for thing in cleaned_up:
 		analyze = str(thing.find_all('br'))
 		end = analyze.find( 'Scorekeeper')
-		print analyze[0:end].replace('<br>' , '\n')
+		final = analyze[1:end].replace('<br>' , ';')
+		# print final 
+		final2 = final.split(";")
+		print final2
 	hand.close()
 
 
