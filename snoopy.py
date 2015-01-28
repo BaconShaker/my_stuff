@@ -17,6 +17,7 @@ import urllib2
 import os
 import tabulate
 import re
+import numpy
 
 composite_schedule = "http://ushlstats.stats.pointstreak.com/leagueschedule.html?leagueid=49&seasonid=12983"
 
@@ -25,6 +26,10 @@ def sift_games(link):
 	soup = BeautifulSoup(handle)
 	# print handle
 	# print soup.prettify()
+	# Make it so IF the date was too long ago it returns nothing. I only want tonight in this program. 
+
+
+
 	contents = soup.find_all(target='_blank')
 	prefix = '<a href="gamesheet_full.html?gameid='
 	r = len(prefix)  
@@ -87,9 +92,9 @@ def show_box(gamesheets):
 ushl_scrape = show_box(gamesheets)
 # Get rid of the blank spaces in the list...
 
-
+# For DEBUGGUNG
 for index, entry in enumerate(ushl_scrape):
-	print "\nThis is game INDEX#:" ,  index
+	print "\nThis is game INDEX#:" ,  index + 1
 	info = [i for i in entry]
 	couple = (index , info)
 
@@ -98,7 +103,52 @@ for index, entry in enumerate(ushl_scrape):
 
 
 
+def seperate(boxscores):
+	crop = boxscores
+	counts = 0 
+	how_long = len(boxscores)
+	print "Boxscores is ", how_long, " things long."
+	
+	for game in boxscores:
 
+
+		if counts <= how_long:
+			crop[counts] = str(game[1:]).replace('Referee: ' , '')
+			crop[counts] = str(crop[counts]).replace('Referee 2: ' , '')
+			crop[counts] = str(crop[counts]).replace('Linesman 1: ' , '')
+			crop[counts] = str(crop[counts]).replace('Linesman 2: ' , '')
+			crop[counts] = str(crop[counts]).replace("'"  ,  " ")
+			crop[counts] = str(crop[counts]).replace("[" , "")
+			crop[counts] = str(crop[counts]).replace("]", "")
+			guys = crop[counts].count(',') + 1
+			print "\nThere were " , guys, " officials in game " , counts + 1 , ": \n"
+			print crop[counts] , "\n"
+		counts += 1
+
+	print ""
+	# print "This is crop: " , crop
+	print ""
+	return crop
+
+officials = seperate(ushl_scrape)
+print ""
+print "This is officials: " , officials
+
+
+
+
+def add_to_csv(official):
+	fopen = open('/Users/AsianCheddar/Desktop/ushl_scrape/official_list.csv', 'a')
+	fwriter = csv.writer(fopen, quoting = csv.QUOTE_MINIMAL)
+	
+	fwriter.writerow(official)
+
+	fopen.close()
+
+
+for official in officials:
+
+	add_to_csv(official.split(','))
 
 
 
