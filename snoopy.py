@@ -18,6 +18,7 @@ import os
 import tabulate
 import re
 import numpy
+from collecitons import counter
 
 composite_schedule = "http://ushlstats.stats.pointstreak.com/leagueschedule.html?leagueid=49&seasonid=12983"
 
@@ -31,6 +32,7 @@ def sift_games(link):
 
 
 	contents = soup.find_all(target='_blank')
+	
 	prefix = '<a href="gamesheet_full.html?gameid='
 	r = len(prefix)  
 	print r 
@@ -50,7 +52,7 @@ def sift_games(link):
 
 gamesheets = sift_games(composite_schedule)
 
-# print gamesheets
+print gamesheets
 def show_box(gamesheets):
 	boxscore = []
 	game_number = 1
@@ -61,32 +63,32 @@ def show_box(gamesheets):
 
 	# print gamesheets2
 	sike = 0
-	while sike == 0:
-		for game in gamesheets2:
-			print ""
-			link = "http://ushlstats.stats.pointstreak.com/" + game
-			# print  link
-			hand = urllib2.urlopen(link)
-			soup2 = BeautifulSoup(hand)
-			cleaned_up = soup2.select(".notes")
+	# while sike == 0:
+	for game in gamesheets2:
+		print ""
+		link = "http://ushlstats.stats.pointstreak.com/" + game
+		# print  link
+		hand = urllib2.urlopen(link)
+		soup2 = BeautifulSoup(hand)
+		cleaned_up = soup2.select(".notes")
 
-			for thing in cleaned_up:
-				analyze = str(thing.find_all('br'))
-				end = analyze.find( 'Scorekeeper')
-				final = analyze[1:end].replace('<br>' , ';')
-				# print final 
-				final2 = final.split(";")
-				final3 = final2[1:-1]
-			
-			# print "This is game #" , game_number , final3
-			game_number += 1
+		for thing in cleaned_up:
+			analyze = str(thing.find_all('br'))
+			end = analyze.find( 'Scorekeeper')
+			final = analyze[1:end].replace('<br>' , ';')
+			# print final 
+			final2 = final.split(";")
+			final3 = final2[1:-1]
+		
+		# print "This is game #" , game_number , final3
+		game_number += 1
 
-			boxscore.append(final3)
+		boxscore.append(final3)
 
-			hand.close()
-			if game_number == 6:
-				sike = 1
-				break
+		hand.close()
+			# if game_number == 6:
+			# 	sike = 1
+			# 	break
 	return boxscore
 
 ushl_scrape = show_box(gamesheets)
@@ -121,6 +123,9 @@ def seperate(boxscores):
 			crop[counts] = str(crop[counts]).replace("[" , "")
 			crop[counts] = str(crop[counts]).replace("]", "")
 			guys = crop[counts].count(',') + 1
+			if guys < 4:
+				crop[counts] += ',  BLANK'
+
 			print "\nThere were " , guys, " officials in game " , counts + 1 , ": \n"
 			print crop[counts] , "\n"
 		counts += 1
@@ -137,19 +142,19 @@ print "This is officials: " , officials
 
 
 
-def add_to_csv(official):
+def add_to_csv(crew):
 	fopen = open('/Users/AsianCheddar/Desktop/ushl_scrape/official_list.csv', 'a')
 	fwriter = csv.writer(fopen, quoting = csv.QUOTE_MINIMAL)
+	print "This is crew: " , crew
 	
-	fwriter.writerow(official)
+	fwriter.writerow(crew)
 
 	fopen.close()
 
 
-for official in officials:
+for crew in officials:
 
-	add_to_csv(official.split(','))
-
+	add_to_csv(crew.split(','))
 
 
 
