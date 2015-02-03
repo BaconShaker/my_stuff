@@ -35,8 +35,10 @@ soup_akira = open_link(all_clothing)
 links_all(soup_akira)
 
 
+# up to this point the py opens the main products page "all clothes" and returns all the links on the page. 
+# Below is the CSS selector for each products' details page. 
 
-
+#product-listing > li:nth-child(7) > div.ProductDetails > strong > a
 
 
 
