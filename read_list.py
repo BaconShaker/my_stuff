@@ -3,58 +3,51 @@
 
 import csv
 from collections import Counter
+from tabulate import tabulate
 
 official_list = "/Users/AsianCheddar/Desktop/ushl_scrape/official_list.csv"
 csvfile = open(official_list)
-crew_list = csv.reader(csvfile, dialect = 'excel')
+crew_list = csv.reader(csvfile, dialect = 'excel', skipinitialspace = True)
 master_list = []
-for crew in crew_list:
-	master_list.append(crew[0])
-	master_list.append(crew[1])
-	master_list.append(crew[2])
-	master_list.append(crew[3])
+# for crew in crew_list:
+# 	master_list.append(crew[0])
+# 	master_list.append(crew[1])
+# 	master_list.append(crew[2])
+# 	master_list.append(crew[3])
+# 	master_list.append(crew[4])
 
-total = Counter(master_list)
+# total = Counter(master_list)
 
-# print list(total.elements())
-print total.most_common(25)
+# # print list(total.elements())
+# common = [entry for entry in total.most_common(45)]
+# rank = 1
+# for guy in common:
 
+# 	print guy[0], " is listed on a gamesheet: " , guy[1], "times.		# " , rank
+# 	rank += 1
+# print ""
+# print common
 
-# all_positions = [[i[0] , i[1], i[2], i[3]] for i in crew_list]
-# print Counter(all_positions)
+# unique = [[guy[0], guy[1]] for guy in common]
 
-# c =  Counter([x[0] for x in crew_list])
+# print ""
+# print unique
+# pretty = tabulate(unique, headers = [ 'Name' , 'Games worked'])
+# print "\n" * 20
+# print "Here is the Master List for both the USHL and the SPHL. \n"
 
-# a = Counter(pos1)
-# print a
+# print pretty
 
-# print c.most_common(2)
-
-
-
-
-
-
-
-
-
-
-# first_position = [position[0]for position in crew_list]
-# second_position = [position[1] for position in crew_list]
-# third_position = [position[2] for position in crew_list]
-# fourth_position = [position[3] for position in crew_list]
-
-# print first_position
-# print Counter(first_position)
-# print Counter(second_position)
-# print Counter(third_position)
-# print Counter(fourth_position)
+# print master_list
 
 
-# for x in first_position:
-# 	print Counter(x)
+total_ushl = [game for game in crew_list if crew_list[0] == 'USHL']
+
+total_sphl = [game for game in master_list if master_list[0] == 'SPHL']
 
 
-# print cnt
+print "USHL: " , total_ushl
+print "\n" *5
+print "SPHL: " , total_sphl
 
 csvfile.close()
