@@ -96,6 +96,7 @@ def show_box(gamesheets):
 			# 	sike = 1
 			# 	break
 	return boxscore
+	
 def seperate(boxscores):
 	crop = boxscores
 	counts = 0 
